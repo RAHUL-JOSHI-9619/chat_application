@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Temporary Chat</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div id="chat-container">
+        <!-- Button to clear messages -->
+        <button id="clear-chat-btn" class="clear-chat-btn">
+            <i class="fas fa-trash-alt"></i>
+        </button>
+
+        <!-- Button to load all messages -->
+        <button id="load-chat-btn" class="load-chat-btn">
+            <i class="fas fa-sync-alt"></i>
+        </button>
+
+        <div id="messages">
+            <!-- Chat messages will appear here -->
+            {% for message in messages %}
+                <div class="message-box">{{ message }}</div>
+            {% endfor %}
+        </div>
+
+        <div id="message-form">
+            <textarea id="message-input" placeholder="Type a message..."></textarea>
+            <button id="send-btn" class="send-btn"><i class="fas fa-paper-plane"></i></button>
+        </div>
+    </div>
+
+    <script>
+        const sendBtn = document.getElementById('send-btn');
+        const messageInput = document.getElementById('message-input');
+        const messagesDiv = document.getElementById('messages');
+        const clearChatBtn = document.getElementById('clear-chat-btn');
+        const loadChatBtn = document.getElementById('load-chat-btn');
+
+        // Function to send message to the Flask backend
+        function sendMessage() {
+            const messageText = messageInput.value.trim();
+            if (messageText !== '') {
+                // Send message via POST request to Flask server
+                fetch('/send_message', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: `message=${messageText}`
+                }).then(response => {
+                    if (response.ok) {
+                        // Clear the message input and reload messages
+                        messageInput.value = '';
+                        loadMessages();
+                    }
+                });
+            }
+        }
+
+        // Function to load all messages from Flask backend
+        function loadMessages() {
+            fetch('/get_messages')
+                .then(response => response.json())
+                .then(messages => {
+                    // Clear current messages and display all the messages from the backend
+                    messagesDiv.innerHTML = '';
+                    messages.forEach(message => {
+                        const messageBox = document.createElement('div');
+                        messageBox.classList.add('message-box');
+                        messageBox.innerText = message;
+                        messagesDiv.appendChild(messageBox);
+                    });
+                    // Scroll to the latest message
+                    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+                });
+        }
+
+        // Send message when the Send button is clicked
+        sendBtn.onclick = sendMessage;
+
+        // Send message when the Enter key is pressed (without Shift)
+        messageInput.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault(); // Prevent adding a new line
+                sendMessage();
+            }
+        });
+
+        // Clear all messages
+        clearChatBtn.onclick = function() {
+            // Send a POST request to the Flask backend to clear the chat
+            fetch('/clear_chat', {
+                method: 'POST',
+            }).then(response => {
+                if (response.ok) {
+                    // If successful, clear the messages in the UI as well
+                    messagesDiv.innerHTML = '';  // Remove all messages from the container
+                }
+            });
+        };
+
+        // Load all messages when the page loads or when the button is clicked
+        window.onload = loadMessages;
+        loadChatBtn.onclick = loadMessages;
+    </script>
+</body>
+</html>

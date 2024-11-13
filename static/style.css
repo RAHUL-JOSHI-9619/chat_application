@@ -1,0 +1,161 @@
+/* Basic Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body and Container Styling */
+body {
+    font-family: Arial, sans-serif;
+    height: 100vh;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden; /* Prevent overflow due to moving background */
+}
+
+/* Animated Gradient Background */
+body::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, #1a1a3d, #000000, #003366, #4b4b8f);
+    background-size: 400% 400%;
+    animation: gradientAnimation 10s ease infinite;
+    z-index: -1; /* Keeps the background behind the chat container */
+}
+
+/* Gradient Animation */
+@keyframes gradientAnimation {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+/* Chat Container Styling */
+#chat-container {
+    width: 100%;
+    max-width: 600px;
+    height: 80%;
+    background-color: rgba(0, 0, 0, 0.7); /* Black background with 70% opacity */
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    z-index: 1; /* Ensures the chat container is above the background */
+}
+
+/* Clear Chat Button Styling */
+#clear-chat-btn {
+    background-color: #FF6F61; /* Dustbin button color */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    position: absolute; /* Position the button absolutely */
+    top: 60px; /* 10px from the top */
+    right: 10px; /* 10px from the right */
+}
+
+#clear-chat-btn i {
+    margin-right: 5px; /* Space between the icon and text */
+}
+
+/* Messages Section Styling */
+#messages {
+    flex-grow: 1;
+    padding: 15px;
+    overflow-y: auto;
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* Align messages to the left */
+}
+
+/* Message Box Styling */
+.message-box {
+    background-color: #e6f7ff;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    width: fit-content;
+    max-width: 80%;
+    word-wrap: break-word;
+    word-break: break-word;
+    white-space: pre-wrap;
+}
+
+/* Message Form Styling */
+#message-form {
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f9f9f9;
+    border-top: 1px solid #ddd;
+}
+
+/* Textarea Styling */
+textarea {
+    width: 80%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    resize: none;
+    font-size: 16px;
+    min-height: 40px;
+}
+
+/* Button Styling */
+button {
+    padding: 10px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+/* Send Button Styling */
+.send-btn {
+    padding: 10px 15px; /* Increased padding for button */
+    font-size: 20px; /* Larger icon */
+}
+
+/* Load Chat Button Styling */
+.load-chat-btn {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    margin: 10px;
+    width: fit-content;
+    align-self: flex-end;
+}
+
+.load-chat-btn i {
+    margin-right: 5px;
+}
